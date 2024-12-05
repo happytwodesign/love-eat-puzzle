@@ -44,7 +44,7 @@ export default function ExampleGallery({ onSelect }: ExampleGalleryProps) {
             className="overflow-hidden cursor-pointer transition-transform hover:scale-105"
             onClick={() => onSelect(example.src)}
           >
-            <div className="relative aspect-[4/3] py-1">
+            <div className="relative aspect-[4/3] ">
               <Image
                 src={example.src}
                 alt={example.alt}
