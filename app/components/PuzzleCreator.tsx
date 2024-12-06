@@ -11,26 +11,32 @@ import { Snowfall } from './Snowfall'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
-const examples = [
+interface ExampleImage {
+  id: number
+  src: string
+  alt: string
+}
+
+const examples: ExampleImage[] = [
   {
     id: 1,
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/downloadedImage-46-RX1LEsAjrQ8iHCJUkj9tQyJDI9SXSG.png",
-    alt: "Snowman in pink forest"
+    src: '/images/pixar_style_a_cute_faceless_white_fat_cat_in_a_snowy_winter_worest_3d_illustration__jqc9862q8gcnh2baf65j_1.png',
+    alt: "White cat in snowy forest"
   },
   {
     id: 2,
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/downloadedImage-47-hPD1UhyRcrc6oQCvuw7VDknonkCjnH.png",
-    alt: "Snowman with top hat"
+    src: '/images/pixar_style_a_giant_faceless_white_fat_dog_with_a_transparent_belly_with_pink_full_of_water_and_sno_63zrfy6w7u0rddb5z44z_0.png',
+    alt: "White dog in snow"
   },
   {
     id: 3,
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/downloadedImage-48-Cm6ptTGB7HIon32hfYq3CB4Lqm8RBl.png",
-    alt: "Underwater snowman"
+    src: '/images/sashaisdrawing_httpss.mj.runIVZxjcY10eo_a_Christmas_tree_in_t_ef2ae1df-0713-4c48-abe7-6dc257bc3fdd_0.png',
+    alt: "Christmas tree"
   },
   {
     id: 4,
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/downloadedImage-51-W7cshKEgp2xYYuHelUuapvSgyBIBUf.png",
-    alt: "Treehouse in winter"
+    src: '/images/sashaisdrawing_httpss.mj.runHh2b3gvNoAM_httpss.mj.runds29nFjI_0ee706f7-2bd0-4a13-b42d-2c9184402b2e_1.png',
+    alt: "Christmas decoration"
   }
 ]
 
@@ -55,7 +61,7 @@ const predefinedPrompts = [
 
 export default function PuzzleCreator() {
   const router = useRouter()
-  const [selectedImage, setSelectedImage] = useState(examples[0].src)
+  const [selectedImage, setSelectedImage] = useState<string>(examples[0].src)
   const [complexity, setComplexity] = useState('110')
   const [isPortrait, setIsPortrait] = useState(false)
   const [style, setStyle] = useState('Default')
@@ -136,10 +142,11 @@ export default function PuzzleCreator() {
       }
       // Wait for the image to be generated
       const result = await pollForResult(data.id)
-      console.log('Image generated successfully with prompt:', randomPrompt)
+      console.log('Image generated successfully:', result.output[0])
+      // Set the full URL directly
       setSelectedImage(result.output[0])
     } catch (error) {
-      console.error('Error generating image with prompt:', randomPrompt, error)
+      console.error('Error generating image:', error)
       setError('Failed to generate image. Please try again.')
     } finally {
       setIsGenerating(false)
@@ -161,7 +168,7 @@ export default function PuzzleCreator() {
   }
 
   const handlePlayOnline = () => {
-    const puzzleId = Date.now().toString() // Generate a simple unique ID
+    const puzzleId = Date.now().toString()
     const params = new URLSearchParams({
       imageUrl: encodeURIComponent(selectedImage),
       complexity: complexity,

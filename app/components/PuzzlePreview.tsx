@@ -4,16 +4,16 @@ import Image from 'next/image'
 import { cn } from "@/lib/utils"
 
 // Import your SVG paths as raw text:
-import puzzle30Landscape from './SVG/5x6_30.svg?raw'
-import puzzle30Portrait from './SVG/5x6_30.svg?raw'
-import puzzle110Landscape from './SVG/11x10_110.svg?raw'
-import puzzle110Portrait from './SVG/10x11_250.svg?raw'
-import puzzle252Landscape from './SVG/18x14_252.svg?raw'
-import puzzle252Portrait from './SVG/14x18_252.svg?raw'
-import puzzle500Landscape from './SVG/25x20_500.svg?raw'
-import puzzle500Portrait from './SVG/20x25_500.svg?raw'
-import puzzle1000Landscape from './SVG/40x25_1000.svg?raw'
-import puzzle1000Portrait from './SVG/25x40_1000.svg?raw'
+import puzzle30Landscape from '../../public/images/SVG/6x5_30.svg?raw'
+import puzzle30Portrait from '../../public/images/SVG/5x6_30.svg?raw'
+import puzzle110Landscape from '../../public/images/SVG/11x10_110.svg?raw'
+import puzzle110Portrait from '../../public/images/SVG/10x11_250.svg?raw'
+import puzzle252Landscape from '../../public/images/SVG/18x14_252.svg?raw'
+import puzzle252Portrait from '../../public/images/SVG/14x18_252.svg?raw'
+import puzzle500Landscape from '../../public/images/SVG/25x20_500.svg?raw'
+import puzzle500Portrait from '../../public/images/SVG/20x25_500.svg?raw'
+import puzzle1000Landscape from '../../public/images/SVG/40x25_1000.svg?raw'
+import puzzle1000Portrait from '../../public/images/SVG/25x40_1000.svg?raw'
 
 interface PuzzlePreviewProps {
   imageUrl: string

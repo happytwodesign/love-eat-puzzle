@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import PuzzleCanvas from '@/app/components/PuzzleCanvas'
-import { Snowfall } from '@/app/components/Snowfall'
-import { puzzleDimensions } from '@/app/components/PuzzlePreview'
+import PuzzleCanvas from '@/components/PuzzleCanvas'
+import { Snowfall } from '@/components/Snowfall'
+import { puzzleDimensions } from '@/components/PuzzlePreview'
 
 export default function PlayPuzzle({ params }: { params: { id: string } }) {
   const searchParams = useSearchParams()

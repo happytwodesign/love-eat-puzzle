@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card'
 const examples = [
   {
     id: 1,
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/downloadedImage-46-RX1LEsAjrQ8iHCJUkj9tQyJDI9SXSG.png",
+    src: "https://cdn.midjourney.com/0ee706f7-2bd0-4a13-b42d-2c9184402b2e/0_0.png",
     alt: "Snowman in pink forest"
   },
   {
@@ -14,12 +14,12 @@ const examples = [
   },
   {
     id: 3,
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/downloadedImage-48-Cm6ptTGB7HIon32hfYq3CB4Lqm8RBl.png",
+    src: "https://cdn.midjourney.com/ef2ae1df-0713-4c48-abe7-6dc257bc3fdd/0_0.png",
     alt: "Underwater snowman"
   },
   {
     id: 4,
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/downloadedImage-50-TPbsDiaxQhwmAzTPGPphNhdHPoikF3.png",
+    src: "https://www.krea.ai/api/img?f=webp&i=https%3A%2F%2Ftest1-emgndhaqd0c9h2db.a01.azurefd.net%2Fimages%2F31a19b94-3717-4212-b844-7235488a1ecc.png",
     alt: "Winter snowman"
   },
   {
