@@ -1,8 +1,10 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Stage, Layer, Image as KonvaImage } from 'react-konva'
-import useImage from 'use-image'
+import { Stage, Layer, Image } from 'react-konva'
+import dynamic from 'next/dynamic'
+
+const PuzzleStage = dynamic(() => Promise.resolve(Stage), { ssr: false })
 
 interface PuzzlePiece {
   id: number
@@ -23,13 +25,21 @@ interface PuzzleCanvasProps {
 }
 
 const PuzzleCanvas = ({ imageUrl, complexity, width, height }: PuzzleCanvasProps) => {
-  const [image] = useImage(imageUrl)
+  const [image, setImage] = useState<HTMLImageElement | null>(null)
   const [pieces, setPieces] = useState<PuzzlePiece[]>([])
   const [scale, setScale] = useState(1)
   const stageRef = useRef<any>(null)
   const [stagePos, setStagePos] = useState({ x: 0, y: 0 })
   const [isDragging, setIsDragging] = useState(false)
   const [completedPieces, setCompletedPieces] = useState(0)
+
+  useEffect(() => {
+    const img = new window.Image()
+    img.src = imageUrl
+    img.onload = () => {
+      setImage(img)
+    }
+  }, [imageUrl])
 
   useEffect(() => {
     if (image) {
@@ -122,7 +132,7 @@ const PuzzleCanvas = ({ imageUrl, complexity, width, height }: PuzzleCanvasProps
   }
 
   return (
-    <Stage
+    <PuzzleStage
       width={window.innerWidth}
       height={window.innerHeight}
       ref={stageRef}
@@ -137,7 +147,7 @@ const PuzzleCanvas = ({ imageUrl, complexity, width, height }: PuzzleCanvasProps
     >
       <Layer>
         {pieces.map((piece) => (
-          <KonvaImage
+          <Image
             key={piece.id}
             image={image}
             x={piece.x}
@@ -160,7 +170,7 @@ const PuzzleCanvas = ({ imageUrl, complexity, width, height }: PuzzleCanvasProps
           />
         ))}
       </Layer>
-    </Stage>
+    </PuzzleStage>
   )
 }
 
