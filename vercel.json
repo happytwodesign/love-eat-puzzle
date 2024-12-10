@@ -3,10 +3,13 @@
   "builds": [
     {
       "src": "package.json",
-      "use": "@vercel/next",
-      "config": {
-        "installCommand": "apt-get update && apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev pixman libpixman-1-dev && npm install"
-      }
+      "use": "@vercel/next"
     }
-  ]
+  ],
+  "build": {
+    "env": {
+      "LD_LIBRARY_PATH": "/lib:/usr/lib:/usr/local/lib",
+      "PKG_CONFIG_PATH": "/usr/lib/pkgconfig:/usr/local/lib/pkgconfig"
+    }
+  }
 } 
