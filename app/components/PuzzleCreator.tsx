@@ -48,7 +48,28 @@ const puzzleDimensions = {
   '500': { width: 530, height: 390 },
   '1000': { width: 765, height: 525 }
 }
-const styleOptions = ['Default', 'Watercolor', 'Oil Painting', 'Sketch', 'Pixel Art']
+const styleOptions = [
+  {
+    name: 'Default',
+    prompt: null
+  },
+  {
+    name: 'Watercolor',
+    prompt: 'watercolor painting style, soft and flowing with visible brush strokes and color blending'
+  },
+  {
+    name: 'Oil Painting',
+    prompt: 'oil painting style with rich textures, visible brush strokes, and deep colors'
+  },
+  {
+    name: 'Sketch',
+    prompt: 'detailed pencil sketch style with fine lines and shading'
+  },
+  {
+    name: 'Pixel Art',
+    prompt: 'pixel art style with clear pixels and limited color palette'
+  }
+]
 
 const predefinedPrompts = [
   "pixar style An elegant Christmas tree in a minimalist style, with lush green branches and decorated with pastel-colored ornaments in soft pink, blue, and peach hues. A golden star sits on top of the tree, and neatly wrapped gift boxes in coordinating pastel shades with ribbons are placed underneath. The background is simple and light beige, creating a clean and modern festive look, 3D illustration ",
@@ -70,6 +91,8 @@ export default function PuzzleCreator() {
   const containerRef = useRef<HTMLDivElement>(null)
   const previewRef = useRef<HTMLDivElement>(null)
   const [previewSize, setPreviewSize] = useState({ width: 0, height: 0 })
+  const [isStyleProcessing, setIsStyleProcessing] = useState(false)
+  const [styleError, setStyleError] = useState<string | null>(null)
 
   const updatePreviewSize = useCallback(() => {
     if (containerRef.current && previewRef.current) {
@@ -140,11 +163,13 @@ export default function PuzzleCreator() {
       if (data.error) {
         throw new Error(data.error)
       }
-      // Wait for the image to be generated
-      const result = await pollForResult(data.id)
-      console.log('Image generated successfully:', result.output[0])
-      // Set the full URL directly
-      setSelectedImage(result.output[0])
+      
+      if (Array.isArray(data.output) && data.output.length > 0) {
+        console.log('Image URL:', data.output[0])
+        setSelectedImage(data.output[0])
+      } else {
+        throw new Error('No image was generated')
+      }
     } catch (error) {
       console.error('Error generating image:', error)
       setError('Failed to generate image. Please try again.')
@@ -184,12 +209,56 @@ export default function PuzzleCreator() {
     updatePreviewSize()
   }
 
+  const applyStyle = async (styleName: string) => {
+    const selectedStyle = styleOptions.find(s => s.name === styleName)
+    if (!selectedStyle || styleName === 'Default') {
+      setStyle(styleName)
+      return
+    }
+
+    setIsStyleProcessing(true)
+    setStyleError(null)
+    console.log('Applying style:', styleName)
+
+    try {
+      const response = await fetch('/api/style-transfer', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          imageUrl: selectedImage,
+          styleName,
+          prompt: selectedStyle.prompt
+        }),
+      })
+
+      const data = await response.json()
+      if (data.error) {
+        throw new Error(data.error)
+      }
+
+      if (Array.isArray(data.output) && data.output.length > 0) {
+        console.log('Styled image URL:', data.output[0])
+        setSelectedImage(data.output[0])
+        setStyle(styleName)
+      } else {
+        throw new Error('Style transfer produced no output')
+      }
+    } catch (error) {
+      console.error('Style transfer error:', error)
+      setStyleError('Failed to apply style. Please try again.')
+    } finally {
+      setIsStyleProcessing(false)
+    }
+  }
+
   return (
     <div ref={containerRef} className="max-w-2xl mx-auto px-4 h-[calc(100vh-3rem)] flex flex-col justify-between relative bg-white py-2">
       <Snowfall />
-      {error && (
+      {(error || styleError) && (
         <div className="absolute top-4 left-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded" role="alert">
-          <span className="block sm:inline">{error}</span>
+          <span className="block sm:inline">{error || styleError}</span>
         </div>
       )}
       <div className="flex-grow flex flex-col justify-center overflow-hidden py-4">
@@ -294,22 +363,28 @@ export default function PuzzleCreator() {
           <div className="flex flex-col items-center justify-center">
             <Popover>
               <PopoverTrigger asChild>
-                <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-2 cursor-pointer">
+                <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-2 cursor-pointer relative">
                   <Wand2 className="w-5 h-5 text-gray-700" />
+                  {isStyleProcessing && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-80 rounded-full">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-700" />
+                    </div>
+                  )}
                 </div>
               </PopoverTrigger>
-              <PopoverContent align="start" className="w-[120px] p-1 rounded-xl">
+              <PopoverContent align="start" className="w-[200px] p-1 rounded-xl">
                 <div className="flex flex-col">
                   {styleOptions.map((option) => (
                     <button
-                      key={option}
+                      key={option.name}
                       className={cn(
                         "w-full text-left px-3 py-2 text-sm rounded-md",
-                        style === option ? "bg-accent" : "hover:bg-accent"
+                        style === option.name ? "bg-accent" : "hover:bg-accent"
                       )}
-                      onClick={() => setStyle(option)}
+                      onClick={() => applyStyle(option.name)}
+                      disabled={isStyleProcessing}
                     >
-                      {option}
+                      {option.name}
                     </button>
                   ))}
                 </div>
