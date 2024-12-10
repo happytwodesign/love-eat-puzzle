@@ -11,5 +11,8 @@
       "LD_LIBRARY_PATH": "/lib:/usr/lib:/usr/local/lib",
       "PKG_CONFIG_PATH": "/usr/lib/pkgconfig:/usr/local/lib/pkgconfig"
     }
+  },
+  "env": {
+    "REPLICATE_API_TOKEN": "@replicate_api_token"
   }
 } 
